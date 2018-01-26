@@ -1,0 +1,7 @@
+maven3 手动安装本地jar到仓库
+taobao-sdk-java-auto:
+    mvn install:install-file -DgroupId=taobao.sdk -DartifactId=taobao-sdk-auto -Dversion=1.0.1 -Dpackaging=jar -Dfile=taobao-sdk-java-auto_1512359577939-20171208.jar
+oracle:
+    mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc7 -Dversion=12.1.0.2 -Dpackaging=jar -Dfile=ojdbc7-12.1.0.2.jar
+wpay:
+    mvn install:install-file -DgroupId=wo.pay -DartifactId=wo-pay -Dversion=0.0.2 -Dpackaging=jar -Dfile=mer-wapPaySignUtil-0.0.2-SNAPSHOT.jar

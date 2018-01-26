@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: film-tickets
+  datasource:
+    platform: POSTGRESQL
+    continue-on-error: false
+    url: jdbc:postgresql://192.168.1.11:5401/film_ticket
+    username: capital
+    password: capitaldb
+    driver-class-name: org.postgresql.Driver
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
