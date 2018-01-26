@@ -10,13 +10,15 @@ import java.util.Map;
  */
 public class DynamicSql {
     public String findByIdSql(@Param("table_name") final String table_name, @Param("id") final Integer id) {
-        return new SQL() {
+        String sql = new SQL() {
             {
                 SELECT("*");
                 FROM(table_name);
                 WHERE("id = #{id}");
             }
         }.toString();
+        System.out.println(sql);
+        return sql;
     }
     public String findAllSql(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map) {
         StringBuffer condition = new StringBuffer();
@@ -33,7 +35,7 @@ public class DynamicSql {
 
             index++;
         }
-        return new SQL() {
+        String sql = new SQL() {
             {
                 SELECT("*");
                 FROM(table_name);
@@ -42,41 +44,67 @@ public class DynamicSql {
                 }
             }
         }.toString();
+        System.out.println(sql);
+        return sql;
     }
     public String createObject(@Param("table_name") final String table_name,  @Param("map") final Map<String, Object> map) {
-        return new SQL() {
+        String sql = new SQL() {
             {
                 INSERT_INTO(table_name);
                 for (Map.Entry<String, Object> entry : map.entrySet()){
-                    VALUES(entry.getKey(), entry.getValue().toString());
-                }
-            }
-        }.toString();
-    }
-    public String modifyObject(@Param("table_name") final String table_name,  @Param("id") final Integer id, @Param("map") final Map<String, Object> map) {
-        return new SQL() {
-            {
-                UPDATE(table_name);
-                for (Map.Entry<String, Object> entry : map.entrySet()){
+                    if(entry.getKey() == "id" || entry.getValue() == null){
+                        continue;
+                    }
+                    if(entry.getValue().getClass().getTypeName() == "java.lang.Integer"){
+                        VALUES(entry.getKey(), entry.getValue().toString());
+                        continue;
+                    }
                     StringBuffer sb = new StringBuffer();
-                    sb.append(entry.getKey());
-                    sb.append("=");
                     sb.append("'");
                     sb.append(entry.getValue());
                     sb.append("'");
+                    VALUES(entry.getKey(), sb.toString());
+                }
+            }
+        }.toString();
+        System.out.println(sql);
+        return sql;
+    }
+    public String modifyObject(@Param("table_name") final String table_name,  @Param("id") final Integer id, @Param("map") final Map<String, Object> map) {
+        String sql =  new SQL() {
+            {
+                UPDATE(table_name);
+                for (Map.Entry<String, Object> entry : map.entrySet()){
+                    if(entry.getKey() == "id" || entry.getValue() == null){
+                        continue;
+                    }
+                    StringBuffer sb = new StringBuffer();
+                    sb.append(entry.getKey());
+                    sb.append("=");
+                    if(entry.getValue().getClass().getTypeName() == "java.lang.Integer"){
+                        sb.append(entry.getValue());
+                    }else {
+                        sb.append("'");
+                        sb.append(entry.getValue());
+                        sb.append("'");
+                    }
 
                     SET(sb.toString());
                 }
                 WHERE("id = #{id}");
             }
         }.toString();
+        System.out.println(sql);
+        return sql;
     }
     public String deleteObject(@Param("table_name") final String table_name, @Param("id") final Integer id) {
-        return new SQL() {
+        String sql = new SQL() {
             {
                 DELETE_FROM(table_name);
                 WHERE("id = #{id}");
             }
         }.toString();
+        System.out.println(sql);
+        return sql;
     }
 }

@@ -8,8 +8,8 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>film-tickets</name>
-	<description>film-tickets</description>
+	<name>ronaldo</name>
+	<description>ronaldo</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
@@ -54,25 +54,15 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.7.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.oracle</groupId>
-			<artifactId>ojdbc7</artifactId>
-			<version>12.1.0.2</version>
-		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>com.oracle</groupId>-->
+			<!--<artifactId>ojdbc7</artifactId>-->
+			<!--<version>12.1.0.2</version>-->
+		<!--</dependency>-->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>42.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>taobao.sdk</groupId>
-			<artifactId>taobao-sdk-auto</artifactId>
-			<version>1.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>wo.pay</groupId>
-			<artifactId>wo-pay</artifactId>
-			<version>0.0.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -80,9 +70,19 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>3.4.5</version>
+		</dependency>
+		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 			<version>2.8.2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.6.3</version>
 		</dependency>
 	</dependencies>
 

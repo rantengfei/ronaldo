@@ -2,7 +2,10 @@ package aibili.ronaldo.controller;
 
 import aibili.ronaldo.dao.UserDao;
 import aibili.ronaldo.domain.Users;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -45,13 +48,19 @@ public class UsersController {
 
     @ApiOperation(value="创建用户", notes="创建用户")
     @RequestMapping(value = "/user", method = RequestMethod.POST)
-    public void createUser(@RequestBody Map map) {
-        userDao.insert("users", map);
+    public Integer createUser(@RequestBody Users user) {
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<String, Object> map = oMapper.convertValue(user, Map.class);
+        Integer result = userDao.insert("users", map);
+        System.out.println(result);
+        return result;
     }
 
     @ApiOperation(value="修改用户", notes="修改用户")
     @RequestMapping(value = "/user/{id}", method = RequestMethod.PUT)
-    public void modifyUser(@PathVariable("id") Integer id, @RequestBody Map map) {
+    public void modifyUser(@PathVariable("id") Integer id, @RequestBody Users user) {
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<String, Object> map = oMapper.convertValue(user, Map.class);
         userDao.update("users", id, map);
     }
 

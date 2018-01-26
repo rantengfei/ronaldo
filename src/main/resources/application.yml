@@ -1,6 +1,6 @@
 spring:
   application:
-    name: film-tickets
+    name: ronaldo
   datasource:
     platform: POSTGRESQL
     continue-on-error: false
