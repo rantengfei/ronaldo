@@ -1,4 +1,4 @@
-package aibili.ronaldo;
+package aibili.ronaldo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +12,7 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 /**
- * Created by programmer on  2018/1/24.
+ * Created by rtf on  2018/1/24.
  */
 
 @Configuration

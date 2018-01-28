@@ -10,11 +10,14 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by programmer on  2018/1/26.
+ * Created by rtf on  2018/1/26.
  */
 public interface BaseDao<T> {
     @SelectProvider(type=DynamicSql.class, method="findAllSql")
     List<T> findObject(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map);
+
+    @SelectProvider(type=DynamicSql.class, method="findByIdsSql")
+    List<T> findObjectByIds(@Param("table_name") final String table_name, @Param("ids") final List<Integer> ids);
 
     @SelectProvider(type=DynamicSql.class, method="findByIdSql")
     T findObjectById(@Param("table_name") final String table_name, @Param("id") final Integer id);
