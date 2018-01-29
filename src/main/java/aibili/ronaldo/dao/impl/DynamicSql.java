@@ -31,9 +31,8 @@ public class DynamicSql {
                     if(i > 0 && i < ids.size()){
                         OR();
                     }
-                    WHERE("id = #{i}");
+                    WHERE("id = " + i);
                 }
-                WHERE();
             }
         }.toString();
         System.out.println(sql);

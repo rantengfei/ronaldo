@@ -28,7 +28,6 @@ public class UserController {
     @ApiOperation(value="根据id获取用户", notes="根据id获取用户")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Object user(@PathVariable("id") Integer id) {
-        System.out.println(userDao.findObjectById("user", id));
         return userDao.findObjectById("users", id);
     }
 

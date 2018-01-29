@@ -5,6 +5,7 @@ import aibili.ronaldo.dao.UserDao;
 import aibili.ronaldo.domain.Permission;
 import aibili.ronaldo.domain.User;
 import aibili.ronaldo.domain.UserView;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,28 +29,42 @@ public class UrlUserService implements UserDetailsService{
     @Autowired
     private PermissionDao permissionDao;
     @Override
-    public UserDetails loadUserByUsername(String userName) { //重写loadUserByUsername 方法获得 userdetails 类型用户
+    public UserDetails loadUserByUsername(String name) { //重写loadUserByUsername 方法获得 userdetails 类型用户
         Map<String, Object> map = new HashMap<>();
-        map.put("name", userName);
+        map.put("name", name);
         List<Integer> ids = new ArrayList<>();
         List<UserView> users = userDao.getByUserName("users_view", map);
         Integer user_id = 0;
-        if(null != users || users.size() == 0){
-            throw new UsernameNotFoundException("UserName "+userName+" not found");
-        }else{
-            for(UserView user : users) {
-                ids.add(user.getPermission_id());
-                user_id = user.getId();
-            }
-        }
-        List<Permission> permissions = permissionDao.findObjectByIds("permission",ids);
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (Permission permission : permissions) {
-            if (permission != null && permission.getName()!=null) {
-                GrantedAuthority grantedAuthority = new UrlGrantedAuthority(permission.getUrl(),permission.getMethod());
-                grantedAuthorities.add(grantedAuthority);
+        if(null == users || users.size() == 0){
+            throw new UsernameNotFoundException("UserName "+name+" not found");
+        }else{
+
+            for(UserView user : users) {
+//                ids.add(user.getPermission_id());
+                user_id = user.getId();
+
+                System.out.println(user.getMethod().equals("GET"));
+                if(user.getMethod().equals("GET")){
+                    GrantedAuthority grantedAuthority = new UrlGrantedAuthority(user.getUrl(), user.getMethod());
+                    grantedAuthorities.add(grantedAuthority);
+                    GrantedAuthority grantedAuthority1 = new UrlGrantedAuthority(user.getUrl() + "/*", user.getMethod());
+                    grantedAuthorities.add(grantedAuthority1);
+                }else{
+                    GrantedAuthority grantedAuthority = new UrlGrantedAuthority(user.getUrl(), user.getMethod());
+                    grantedAuthorities.add(grantedAuthority);
+                }
             }
         }
+//        List<Permission> permissions = permissionDao.findObjectByIds("permissions",ids);
+//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
+//        for (Permission permission : permissions) {
+//            if (permission != null && permission.getName()!=null) {
+//                System.out.println(permission.getUrl() +":"+ permission.getMethod());
+//                GrantedAuthority grantedAuthority = new UrlGrantedAuthority(permission.getUrl(),permission.getMethod());
+//                grantedAuthorities.add(grantedAuthority);
+//            }
+//        }
         User user = userDao.findObjectById("users", user_id);
         user.setAuthorities(grantedAuthorities);
         return user;
