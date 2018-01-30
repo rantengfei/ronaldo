@@ -1,7 +1,7 @@
 package aibili.ronaldo.controller;
 
-import aibili.ronaldo.dao.UserDao;
-import aibili.ronaldo.domain.User;
+import aibili.ronaldo.dao.RestDao;
+import aibili.ronaldo.utils.ReturnValueUtil;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,21 +14,22 @@ import java.util.Map;
  * Created by rtf on  2018/1/25.
  */
 
-//@RestController
-//@RequestMapping(value="/api/user")
+@RestController
+@RequestMapping(value="/api/user")
 public class UserController {
     @Autowired
-    private UserDao userDao;
+    private RestDao restDao;
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Object user(@PathVariable("id") Integer id) {
-        return userDao.findObjectById("users", id);
+        Map<String, Object> map = restDao.findObjectById("users", id);
+        return ReturnValueUtil.ok(map);
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public List<User> user(@RequestParam(value="name", required = false) String name,
-                           @RequestParam(value="gender", required = false) String gender,
-                           @RequestParam(value="page", required = false) Integer page) {
+    public Object user(@RequestParam(value="name", required = false) String name,
+                       @RequestParam(value="gender", required = false) String gender,
+                       @RequestParam(value="page", required = false) Integer page) {
         Map<String, Object> params = new HashMap<>();
         if(null != name){
             params.put("name", name);
@@ -39,7 +40,7 @@ public class UserController {
         if(null != page){
             PageHelper.startPage(page,10);
         }
-        List<User> list = userDao.findObject("users", params);
-        return list;
+        List<Map<String, Object >> list = restDao.findObject("users", params);
+        return ReturnValueUtil.ok(list);
     }
 }
