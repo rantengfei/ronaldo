@@ -1,9 +1,7 @@
 package aibili.ronaldo.dao;
 
 import aibili.ronaldo.dao.impl.DynamicSql;
-import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;

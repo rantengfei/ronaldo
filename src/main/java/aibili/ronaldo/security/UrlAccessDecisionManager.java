@@ -26,7 +26,9 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
 
         if ("anonymousUser".equals(authentication.getPrincipal())
                 || matchers("/api/ronaldo/login", request)
-                || matchers("/api/ronaldo/signup", request)) {
+                || matchers("/api/ronaldo/signup", request)
+                || matchers("/api/ronaldo/logout", request)
+                || matchers("/api/ronaldo/register", request)) {
             return;
         } else {
             for (GrantedAuthority ga : authentication.getAuthorities()) {
