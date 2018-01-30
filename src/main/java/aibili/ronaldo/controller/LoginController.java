@@ -3,6 +3,7 @@ package aibili.ronaldo.controller;
 import aibili.ronaldo.dao.UserDao;
 import aibili.ronaldo.domain.User;
 import aibili.ronaldo.utils.MD5Util;
+import aibili.ronaldo.utils.ReturnValueUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +45,16 @@ public class LoginController {
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public Object signup(@RequestBody User user, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         authenticateUserAndSetSession(user, request);
-        return "OK";
+        return ReturnValueUtil.ok();
+    }
+
+    @RequestMapping(value="/logout", method = RequestMethod.GET)
+    public Object logoutPage (HttpServletRequest request, HttpServletResponse response) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return ReturnValueUtil.ok();
     }
     private void authenticateUserAndSetSession(User user, HttpServletRequest request) {
         String username = user.getName();
