@@ -3,28 +3,26 @@ package aibili.ronaldo.dao;
 import aibili.ronaldo.dao.impl.DynamicSql;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.SelectKey;
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Created by rtf on  2018/1/26.
+ * Created by rtf on  2018/1/30.
  */
-public interface BaseDao<T> {
+public interface RestDao {
     @SelectProvider(type=DynamicSql.class, method="findAllSql")
-    List<T> findObject(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map);
+    List<Map<String, Object>> findObject(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map);
 
     @SelectProvider(type=DynamicSql.class, method="findByIdsSql")
-    List<T> findObjectByIds(@Param("table_name") final String table_name, @Param("ids") final List<Integer> ids);
+    Map<String, Object> findObjectByIds(@Param("table_name") final String table_name, @Param("ids") final List<Integer> ids);
 
     @SelectProvider(type=DynamicSql.class, method="findByIdSql")
-    T findObjectById(@Param("table_name") final String table_name, @Param("id") final Integer id);
+    Object findObjectById(@Param("table_name") final String table_name, @Param("id") final Integer id);
 
     @SelectProvider(type=DynamicSql.class, method="createObject")
-    @Options(useGeneratedKeys=true, keyProperty="id")
-    Integer insert(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map);
+    void insert(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map);
 
     @SelectProvider(type=DynamicSql.class, method="modifyObject")
     void update(@Param("table_name") final String table_name,  @Param("id") final Integer id, @Param("map") final Map<String, Object> map);

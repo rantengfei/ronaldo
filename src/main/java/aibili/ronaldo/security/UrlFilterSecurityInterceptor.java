@@ -34,9 +34,7 @@ public class UrlFilterSecurityInterceptor extends AbstractSecurityInterceptor im
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         FilterInvocation filterInvocation = new FilterInvocation(request, response, chain);
-        if(!filterInvocation.getRequest().getRequestURI().equals("/swagger-ui.html")){
-           invoke(filterInvocation);
-        }
+        invoke(filterInvocation);
     }
 
     public void invoke(FilterInvocation filterInvocation) throws IOException, ServletException {

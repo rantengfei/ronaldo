@@ -3,8 +3,6 @@ package aibili.ronaldo.controller;
 import aibili.ronaldo.dao.UserDao;
 import aibili.ronaldo.domain.User;
 import aibili.ronaldo.utils.MD5Util;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 
 @RestController
-@RequestMapping(value="/api")
+@RequestMapping(value="/api/ronaldo")
 public class LoginController {
     @Autowired
     private UserDao userDao;

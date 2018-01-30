@@ -24,7 +24,9 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
         String url, method;
 
-        if ("anonymousUser".equals(authentication.getPrincipal())|| matchers("/api/login", request)) {
+        if ("anonymousUser".equals(authentication.getPrincipal())
+                || matchers("/api/ronaldo/login", request)
+                || matchers("/api/ronaldo/signup", request)) {
             return;
         } else {
             for (GrantedAuthority ga : authentication.getAuthorities()) {
@@ -55,7 +57,6 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
 
     private boolean matchers(String url, HttpServletRequest request) {
         AntPathRequestMatcher matcher = new AntPathRequestMatcher(url);
-        System.out.println(request.getMethod()+":"+request.getRequestURI());
         if (matcher.matches(request)) {
             return true;
         }

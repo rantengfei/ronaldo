@@ -1,11 +1,8 @@
 package aibili.ronaldo.security;
 
-import aibili.ronaldo.dao.PermissionDao;
 import aibili.ronaldo.dao.UserDao;
-import aibili.ronaldo.domain.Permission;
 import aibili.ronaldo.domain.User;
 import aibili.ronaldo.domain.UserView;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,8 +23,6 @@ import java.util.Map;
 public class UrlUserService implements UserDetailsService{
     @Autowired
     private UserDao userDao;
-    @Autowired
-    private PermissionDao permissionDao;
     @Override
     public UserDetails loadUserByUsername(String name) { //重写loadUserByUsername 方法获得 userdetails 类型用户
         Map<String, Object> map = new HashMap<>();
@@ -42,8 +37,6 @@ public class UrlUserService implements UserDetailsService{
 
             for(UserView user : users) {
                 user_id = user.getId();
-
-                System.out.println(user.getMethod().equals("GET"));
                 if(user.getMethod().equals("GET") || user.getMethod().equals("ALL")){
                     GrantedAuthority grantedAuthority = new UrlGrantedAuthority(user.getUrl(), user.getMethod());
                     grantedAuthorities.add(grantedAuthority);
