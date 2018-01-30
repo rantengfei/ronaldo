@@ -22,14 +22,12 @@ import javax.servlet.http.HttpServletResponse;
  * Created by rtf on  2018/1/28.
  */
 
-@Api(tags="登录/退出", description="用户登录/退出")
 @RestController
 @RequestMapping(value="/api")
 public class LoginController {
     @Autowired
     private UserDao userDao;
 
-    @ApiOperation(value="登录/退出", notes="登录/退出")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
     public Object login(@AuthenticationPrincipal User loginedUser, @RequestParam(name = "logout", required = false) String logout) {
@@ -45,7 +43,7 @@ public class LoginController {
     @Autowired
     protected AuthenticationManager authenticationManager;
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public Object createNewUser(@ModelAttribute("user") User user, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+    public Object signup(@ModelAttribute("user") User user, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         authenticateUserAndSetSession(user, request);
         return "OK";
     }

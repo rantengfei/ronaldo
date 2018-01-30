@@ -41,14 +41,13 @@ public class UrlUserService implements UserDetailsService{
         }else{
 
             for(UserView user : users) {
-//                ids.add(user.getPermission_id());
                 user_id = user.getId();
 
                 System.out.println(user.getMethod().equals("GET"));
-                if(user.getMethod().equals("GET")){
+                if(user.getMethod().equals("GET") || user.getMethod().equals("ALL")){
                     GrantedAuthority grantedAuthority = new UrlGrantedAuthority(user.getUrl(), user.getMethod());
                     grantedAuthorities.add(grantedAuthority);
-                    GrantedAuthority grantedAuthority1 = new UrlGrantedAuthority(user.getUrl() + "/*", user.getMethod());
+                    GrantedAuthority grantedAuthority1 = new UrlGrantedAuthority(user.getUrl() + "/**", user.getMethod());
                     grantedAuthorities.add(grantedAuthority1);
                 }else{
                     GrantedAuthority grantedAuthority = new UrlGrantedAuthority(user.getUrl(), user.getMethod());
@@ -56,15 +55,6 @@ public class UrlUserService implements UserDetailsService{
                 }
             }
         }
-//        List<Permission> permissions = permissionDao.findObjectByIds("permissions",ids);
-//        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-//        for (Permission permission : permissions) {
-//            if (permission != null && permission.getName()!=null) {
-//                System.out.println(permission.getUrl() +":"+ permission.getMethod());
-//                GrantedAuthority grantedAuthority = new UrlGrantedAuthority(permission.getUrl(),permission.getMethod());
-//                grantedAuthorities.add(grantedAuthority);
-//            }
-//        }
         User user = userDao.findObjectById("users", user_id);
         user.setAuthorities(grantedAuthorities);
         return user;

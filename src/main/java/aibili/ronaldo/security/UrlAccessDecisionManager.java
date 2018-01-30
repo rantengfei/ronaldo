@@ -23,7 +23,8 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> collection) throws AccessDeniedException, InsufficientAuthenticationException {
         HttpServletRequest request = ((FilterInvocation) object).getHttpRequest();
         String url, method;
-        if ("anonymousUser".equals(authentication.getPrincipal())|| matchers("/login", request)) {
+
+        if ("anonymousUser".equals(authentication.getPrincipal())|| matchers("/api/login", request)) {
             return;
         } else {
             for (GrantedAuthority ga : authentication.getAuthorities()) {
