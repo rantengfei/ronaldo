@@ -31,9 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/signup").permitAll()
-                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/api/ronaldo/login").permitAll()
+                .antMatchers("/api/ronaldo/signup").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry)
@@ -46,16 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic();
     }
 
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.ignoring().antMatchers("/v2/api-docs",
-                "/configuration/ui",
-                "/swagger-resources/**",
-                "/configuration/**",
-                "/configuration/security",
-                "/swagger-ui.html",
-                "/webjars/**");
-    }
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(urlUserService).passwordEncoder(new PasswordEncoder() {

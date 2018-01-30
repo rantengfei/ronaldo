@@ -4,13 +4,12 @@ import aibili.ronaldo.dao.RestDao;
 import aibili.ronaldo.domain.User;
 import aibili.ronaldo.utils.MD5Util;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.pagehelper.PageHelper;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,22 +26,36 @@ public class BaseRestController {
     public Object details(HttpServletRequest request, @PathVariable("id") Integer id) {
         String url = request.getRequestURI();
         String[] params = urlProcess(url);
-        restDao.findObjectById(params[0], id);
-        return "details";
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", 0);
+        result.put("data", restDao.findObjectById(params[0], id));
+        return result;
     }
 
     @RequestMapping(value = "/*", method = RequestMethod.GET)
-    public Object list(HttpServletRequest request) {
+    public Map<String, Object> list(HttpServletRequest request) {
         String url = request.getRequestURI();
-        String[] params = urlProcess(url);
+        String[] preUrl = urlProcess(url);
         Map<String, Object> map = new HashMap<>();
+        for (Map.Entry<String, String[]> entry :  request.getParameterMap().entrySet()){
+            map.put(entry.getKey(), entry.getValue()[0]);
+        }
 
-        restDao.findObject(params[0], map);
-        return "list";
+        Map<String, Object> result = new HashMap<>();
+        Map<String, Object> list = new HashMap<>();
+        list.put("list", restDao.findObject(preUrl[0], map));
+        result.put("status", 0);
+        result.put("data", list);
+        return result;
     }
 
     @RequestMapping(value = "/*", method = RequestMethod.POST)
-    public Object create(@RequestBody Object object) {
+    public Object create(HttpServletRequest request, @RequestBody Object object) {
+        String url = request.getRequestURI();
+        String[] params = urlProcess(url);
+        ObjectMapper oMapper = new ObjectMapper();
+        Map<String, Object> map = oMapper.convertValue(object, Map.class);
+        restDao.insert(params[0], map);
         return "create";
     }
 

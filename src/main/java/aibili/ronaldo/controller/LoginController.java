@@ -41,7 +41,7 @@ public class LoginController {
     @Autowired
     protected AuthenticationManager authenticationManager;
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public Object signup(@ModelAttribute("user") User user, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+    public Object signup(@RequestBody User user, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         authenticateUserAndSetSession(user, request);
         return "OK";
     }

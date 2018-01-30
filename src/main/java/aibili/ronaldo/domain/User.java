@@ -15,7 +15,6 @@ public class User implements UserDetails{
     private Integer id;
     private String name;
     private String username;
-    @JsonIgnore
     private String password;
     private String gender;
     private Integer status;

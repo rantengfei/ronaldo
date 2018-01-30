@@ -3,6 +3,7 @@ package aibili.ronaldo.dao;
 import aibili.ronaldo.dao.impl.DynamicSql;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.SelectProvider;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface RestDao {
     Map<String, Object> findObjectByIds(@Param("table_name") final String table_name, @Param("ids") final List<Integer> ids);
 
     @SelectProvider(type=DynamicSql.class, method="findByIdSql")
-    Object findObjectById(@Param("table_name") final String table_name, @Param("id") final Integer id);
+    Map<String, Object> findObjectById(@Param("table_name") final String table_name, @Param("id") final Integer id);
 
     @SelectProvider(type=DynamicSql.class, method="createObject")
     void insert(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map);
