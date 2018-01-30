@@ -15,7 +15,7 @@ import java.util.Map;
  */
 
 @RestController
-@RequestMapping(value="/api/user")
+@RequestMapping(value="/api/ronaldo/users")
 public class UserController {
     @Autowired
     private RestDao restDao;
