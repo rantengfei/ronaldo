@@ -3,6 +3,7 @@ package aibili.ronaldo.dao.impl;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -50,10 +51,68 @@ public class DynamicSql {
                         AND();
                     }
                     StringBuffer condition = new StringBuffer();
-                    condition.append(entry.getKey());
-                    condition.append("='");
-                    condition.append(entry.getValue());
-                    condition.append("'");
+                    if(entry.getKey().contains("-in")){
+                        condition.append(Arrays.toString(entry.getKey().split("-")).replace("[","").replace(","," ").replace("]",""));
+                        condition.append("(");
+                        if(entry.getKey().getClass().getTypeName()=="java.lang.Integer"){
+                            condition.append(Arrays.toString(entry.getValue().toString().split(",")).replace(",",",").replace("[","").replace("]","").replace(" ",""));
+                        }else{
+                            condition.append(Arrays.toString(entry.getValue().toString().split(",")).replace(",","','").replace("[","'").replace("]","'").replace(" ",""));
+                        }
+                        condition.append(")");
+                    }else if(entry.getKey().contains("-contains")){
+                        condition.append("'");
+                        condition.append(entry.getValue());
+                        condition.append("'");
+                        condition.append("=");
+                        condition.append("any(");
+                        condition.append(entry.getKey().replace("-contains",""));
+                        condition.append(")");
+                    }else if(entry.getKey().contains("-gt")){
+                        condition.append(entry.getKey().replace("-gt",""));
+                        condition.append(">");
+                        condition.append(entry.getValue());
+                    }else if(entry.getKey().contains("-lt")){
+                        condition.append(entry.getKey().replace("-lt",""));
+                        condition.append("<");
+                        condition.append(entry.getValue());
+                    }else if(entry.getKey().contains("-ne")){
+                        condition.append(entry.getKey().replace("-ne",""));
+                        condition.append("<>");
+                        condition.append(entry.getValue());
+                    }else if(entry.getKey().contains("-range")){
+                        condition.append(entry.getKey().replace("-range",""));
+                        condition.append(">=");
+                        condition.append(entry.getValue().toString().split("-")[0]);
+                        if(entry.getValue().toString().split("-").length != 1){
+                            condition.append(" ");
+                            condition.append("and");
+                            condition.append(" ");
+                            condition.append(entry.getKey().replace("-range",""));
+                            condition.append("<=");
+                            condition.append(entry.getValue().toString().split("-")[1]);
+                        }
+                    }else if(entry.getKey().contains("-like")){
+                        condition.append(entry.getKey().replace("-like",""));
+                        condition.append(" ");
+                        condition.append("like");
+                        condition.append(" '%");
+                        condition.append(entry.getValue().toString().split("-")[0]);
+                        condition.append("%'");
+                    }else if(entry.getKey().contains("-overlap")){
+                        condition.append(entry.getKey().replace("-overlap",""));
+                        condition.append(" ");
+                        condition.append("&&");
+                        condition.append(" ARRAY[");
+                        condition.append(entry.getValue());
+                        condition.append("]");
+                    }else{
+                        condition.append(entry.getKey());
+                        condition.append("='");
+                        condition.append(entry.getValue());
+                        condition.append("'");
+                    }
+
                     WHERE(condition.toString());
                     index++;
                 }
