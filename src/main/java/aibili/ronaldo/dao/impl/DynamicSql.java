@@ -204,4 +204,20 @@ public class DynamicSql {
             }
         }.toString();
     }
+
+
+    public String findtableSql(@Param("table_name") final String table_name) {
+        String sql = new SQL() {
+            {
+                SELECT("table_name");
+                FROM( "INFORMATION_SCHEMA.tables");
+                WHERE("table_name='"+table_name+"_view'");
+            }
+
+        }.toString();
+        System.out.println(sql);
+        return sql;
+
+    }
+
 }
