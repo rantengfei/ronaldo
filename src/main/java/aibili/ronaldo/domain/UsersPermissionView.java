@@ -3,7 +3,7 @@ package aibili.ronaldo.domain;
 /**
  * Created by rtf on  2018/1/28.
  */
-public class UserView {
+public class UsersPermissionView {
     private Integer id;
     private String name;
     private Integer role_id;

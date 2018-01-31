@@ -2,7 +2,7 @@ package aibili.ronaldo.security;
 
 import aibili.ronaldo.dao.UserDao;
 import aibili.ronaldo.domain.User;
-import aibili.ronaldo.domain.UserView;
+import aibili.ronaldo.domain.UsersPermissionView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,14 +28,14 @@ public class UrlUserService implements UserDetailsService{
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
         List<Integer> ids = new ArrayList<>();
-        List<UserView> users = userDao.getByUserName("users_view", map);
+        List<UsersPermissionView> users = userDao.getByUserName("users_permission_view", map);
         Integer user_id = 0;
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         if(null == users || users.size() == 0){
             throw new UsernameNotFoundException("UserName "+name+" not found");
         }else{
 
-            for(UserView user : users) {
+            for(UsersPermissionView user : users) {
                 user_id = user.getId();
                 if(user.getMethod().equals("GET") || user.getMethod().equals("ALL")){
                     GrantedAuthority grantedAuthority = new UrlGrantedAuthority(user.getUrl(), user.getMethod());
