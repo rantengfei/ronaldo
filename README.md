@@ -12,13 +12,15 @@ program argument: mvn spring-boot:run
 ```
 
 ###Request Method
+
 |     url    | method | params |remark|
 | :---- | :-----: | :----: |:----|
 |<http://host/api/ronaldo/**/{id}>|GET|id|无|
 |<http://host/api/ronaldo/**>|GET|name,page,pagesize|pagesize 默认10, 非必传|
-|<http://host/api/ronaldo/**>| POST|{}|无|
-|<http://host/api/ronaldo/**/{id}>| PUT|{}|无|
-|<http://host/api/ronaldo/**/{id}>| DELETE|id|无|
+|<http://host/api/ronaldo/**>|POST|{}|无|
+|<http://host/api/ronaldo/**/{id}>|PUT|{}|无|
+|<http://host/api/ronaldo/**/{id}>|DELETE|id|无|
+----------------------------
 
 
 ###使用方式
