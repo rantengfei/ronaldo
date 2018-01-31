@@ -28,4 +28,7 @@ public interface RestDao {
 
     @SelectProvider(type=DynamicSql.class, method="deleteObject")
     void delete(@Param("table_name") final String table_name, @Param("id") final Integer id);
+
+    @SelectProvider(type=DynamicSql.class, method="findtableSql")
+    Map<String, Object> findTableView(@Param("table_name") final String table_name);
 }
