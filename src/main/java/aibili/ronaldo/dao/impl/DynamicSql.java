@@ -41,84 +41,108 @@ public class DynamicSql {
     }
 
     public String findAllSql(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map) {
-        return new SQL() {
+
+        String sql =new SQL() {
             {
                 SELECT("*");
                 FROM(table_name);
                 int index = 0;
-                for (Map.Entry<String, Object> entry : map.entrySet()){
-                    if(index > 0 && index < map.size()){
-                        AND();
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (index > 0 && index < map.size()) {
+                        if(entry.getKey().contains("sort")){
+                            if(entry.getValue().toString().contains("-")){
+                                ORDER_BY(entry.getValue().toString().split("-")[1]+" DESC");
+                            }else{
+                                ORDER_BY(entry.getValue().toString());
+                            }
+                            continue;
+                        }else{
+                            AND();
+                        }
                     }
                     StringBuffer condition = new StringBuffer();
-                    if(entry.getKey().contains("-in")){
-                        condition.append(Arrays.toString(entry.getKey().split("-")).replace("[","").replace(","," ").replace("]",""));
+                    if (entry.getKey().contains("-in")) {
+                        condition.append(Arrays.toString(entry.getKey().split("-")).replace("[", "").replace(",", " ").replace("]", ""));
                         condition.append("(");
-                        if(entry.getKey().getClass().getTypeName()=="java.lang.Integer"){
-                            condition.append(Arrays.toString(entry.getValue().toString().split(",")).replace(",",",").replace("[","").replace("]","").replace(" ",""));
-                        }else{
-                            condition.append(Arrays.toString(entry.getValue().toString().split(",")).replace(",","','").replace("[","'").replace("]","'").replace(" ",""));
+                        if (entry.getKey().getClass().getTypeName() == "java.lang.Integer") {
+                            condition.append(Arrays.toString(entry.getValue().toString().split(",")).replace(",", ",").replace("[", "").replace("]", "").replace(" ", ""));
+                        } else {
+                            condition.append(Arrays.toString(entry.getValue().toString().split(",")).replace(",", "','").replace("[", "'").replace("]", "'").replace(" ", ""));
                         }
                         condition.append(")");
-                    }else if(entry.getKey().contains("-contains")){
+                    } else if (entry.getKey().contains("-contains")) {
                         condition.append("'");
                         condition.append(entry.getValue());
                         condition.append("'");
                         condition.append("=");
                         condition.append("any(");
-                        condition.append(entry.getKey().replace("-contains",""));
+                        condition.append(entry.getKey().replace("-contains", ""));
                         condition.append(")");
-                    }else if(entry.getKey().contains("-gt")){
-                        condition.append(entry.getKey().replace("-gt",""));
+                    } else if (entry.getKey().contains("-gt")) {
+                        condition.append(entry.getKey().replace("-gt", ""));
                         condition.append(">");
                         condition.append(entry.getValue());
-                    }else if(entry.getKey().contains("-lt")){
-                        condition.append(entry.getKey().replace("-lt",""));
+                    } else if (entry.getKey().contains("-lt")) {
+                        condition.append(entry.getKey().replace("-lt", ""));
                         condition.append("<");
                         condition.append(entry.getValue());
-                    }else if(entry.getKey().contains("-ne")){
-                        condition.append(entry.getKey().replace("-ne",""));
+                    } else if (entry.getKey().contains("-ne")) {
+                        condition.append(entry.getKey().replace("-ne", ""));
                         condition.append("<>");
                         condition.append(entry.getValue());
-                    }else if(entry.getKey().contains("-range")){
-                        condition.append(entry.getKey().replace("-range",""));
+                    } else if (entry.getKey().contains("-range")) {
+                        condition.append(entry.getKey().replace("-range", ""));
                         condition.append(">=");
                         condition.append(entry.getValue().toString().split("-")[0]);
-                        if(entry.getValue().toString().split("-").length != 1){
+                        if (entry.getValue().toString().split("-").length != 1) {
                             condition.append(" ");
                             condition.append("and");
                             condition.append(" ");
-                            condition.append(entry.getKey().replace("-range",""));
+                            condition.append(entry.getKey().replace("-range", ""));
                             condition.append("<=");
                             condition.append(entry.getValue().toString().split("-")[1]);
                         }
-                    }else if(entry.getKey().contains("-like")){
-                        condition.append(entry.getKey().replace("-like",""));
+                    } else if (entry.getKey().contains("-like")) {
+                        condition.append(entry.getKey().replace("-like", ""));
                         condition.append(" ");
                         condition.append("like");
                         condition.append(" '%");
                         condition.append(entry.getValue().toString().split("-")[0]);
                         condition.append("%'");
-                    }else if(entry.getKey().contains("-overlap")){
-                        condition.append(entry.getKey().replace("-overlap",""));
+                    } else if (entry.getKey().contains("-overlap")) {
+                        condition.append(entry.getKey().replace("-overlap", ""));
                         condition.append(" ");
                         condition.append("&&");
                         condition.append(" ARRAY[");
                         condition.append(entry.getValue());
                         condition.append("]");
-                    }else{
-                        condition.append(entry.getKey());
-                        condition.append("='");
-                        condition.append(entry.getValue());
-                        condition.append("'");
+                    } else {
+                        if(entry.getKey().contains("sort")){
+                            if(entry.getValue().toString().contains("-")){
+                                ORDER_BY(entry.getValue().toString().split("-")[1]+" DESC");
+                            }else {
+                                ORDER_BY(entry.getValue().toString());
+                            }
+                            continue;
+                        }else{
+                            condition.append(entry.getKey());
+                            condition.append("='");
+                            condition.append(entry.getValue());
+                            condition.append("'");
+                        }
                     }
 
                     WHERE(condition.toString());
+
                     index++;
                 }
+
             }
         }.toString();
-    }
+        System.out.println(sql);
+            return sql;
+
+        }
     public String createObject(@Param("table_name") final String table_name,  @Param("map") final Map<String, Object> map) {
         return new SQL() {
             {
