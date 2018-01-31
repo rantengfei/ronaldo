@@ -5,6 +5,8 @@ import aibili.ronaldo.domain.User;
 import aibili.ronaldo.utils.MD5Util;
 import aibili.ronaldo.utils.ReturnValueUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,12 +35,22 @@ public class BaseRestController {
     @RequestMapping(value = "/*", method = RequestMethod.GET)
     public Object list(HttpServletRequest request) {
         String[] preUrl = urlProcess(request);
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         for (Map.Entry<String, String[]> entry :  request.getParameterMap().entrySet()){
-            map.put(entry.getKey(), entry.getValue()[0]);
+            params.put(entry.getKey(), entry.getValue()[0]);
         }
-        List<Map<String, Object>> result = restDao.findObject(preUrl[0], map);
-        return ReturnValueUtil.ok(result);
+        if(null !=  params.get("page")){
+            Integer pageSize = (null != params.get("pagesize"))?
+                    Integer.parseInt(params.get("pagesize").toString()):10;
+            params.remove("page");
+            params.remove("pagesize");
+            PageHelper.startPage(Integer.parseInt(request.getParameterMap().get("page")[0].toString()), pageSize);
+            List<Map<String, Object >> list = restDao.findObject(preUrl[0], params);
+            PageInfo<Map<String, Object >> pageInfo = new PageInfo(list);
+            return ReturnValueUtil.ok(pageInfo);
+        }
+        List<Map<String, Object >> list = restDao.findObject(preUrl[0], params);
+        return ReturnValueUtil.ok(list);
     }
 
     @RequestMapping(value = "/*", method = RequestMethod.POST)
