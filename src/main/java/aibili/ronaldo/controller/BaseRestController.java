@@ -87,11 +87,4 @@ public class BaseRestController {
         return url.substring(url.indexOf(prefix) + prefix.length()).split("/");
     }
 
-    private String tableName(String tableName){
-        Map<String, Object> map = restDao.findTableView(tableName);
-        if(null != map && map.size()>0){
-            tableName = tableName + "_view";
-        }
-        return tableName;
-    }
 }
