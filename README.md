@@ -1,45 +1,25 @@
-#Java Rest 框架
-```
+Java Rest 框架
+=================
 Spring Boot + Spring Security + MyBaits
-```
+-----------------------------
 
 ###IDEA 热启动:
 
 ```
-1、Setting -->  Compiler  --> Build project automaticolly
-2、Ctrl+Alt+Shift+/ --> Registry --> 勾选compiler.automake.allow.when.app.running 
-3、program argument: mvn spring-boot:run
+Setting -->  Compiler  --> Build project automaticolly
+Ctrl+Alt+Shift+/ --> Registry --> 勾选compiler.automake.allow.when.app.running 
+program argument: mvn spring-boot:run
 ```
 
 ###Request Method
-* URL 
-```
-http://host/api/ronaldo/api
-```
-* GET
-```
-url/{id}
-```
-```
-url?name=rtf&gender=男
-```
+|     url    | method | params |remark|
+| :---- | :-----: | :----: |:----|
+|<http://host/api/ronaldo/**/{id}>|GET|id|无|
+|<http://host/api/ronaldo/**>|GET|name,page,pagesize|pagesize 默认10, 非必传|
+|<http://host/api/ronaldo/**>| POST|{}|无|
+|<http://host/api/ronaldo/**/{id}>| PUT|{}|无|
+|<http://host/api/ronaldo/**/{id}>| DELETE|id|无|
 
-* POST
-```
-url:url
-params:{}
-```
-
-* PUT
-```
-url:url/{id}
-params:{}
-```
-
-* DELETE
-```
-url:url/{id}
-```
 
 ###使用方式
 * 通用接口处理 BaseRestController
