@@ -28,9 +28,8 @@ public class LoginController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @ResponseBody
-    public Object login(@AuthenticationPrincipal User loginedUser, @RequestParam(name = "logout", required = false) String logout) {
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public Object signup(@AuthenticationPrincipal User loginedUser, @RequestParam(name = "logout", required = false) String logout) {
         if (logout != null) {
             return null;
         }
@@ -42,8 +41,8 @@ public class LoginController {
 
     @Autowired
     protected AuthenticationManager authenticationManager;
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public Object signup(@RequestBody User user, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public Object login(@RequestBody User user, BindingResult result, HttpServletRequest request, HttpServletResponse response) {
         authenticateUserAndSetSession(user, request);
         return ReturnValueUtil.ok();
     }

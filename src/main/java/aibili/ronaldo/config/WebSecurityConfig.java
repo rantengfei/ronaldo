@@ -7,12 +7,16 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Pattern;
 
 /**
  * Created by rtf on  2018/1/27.
@@ -29,7 +33,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/ronaldo/login").permitAll()
                 .antMatchers("/api/ronaldo/signup").permitAll()
@@ -44,7 +47,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true)
                 .clearAuthentication(true)
                 .and()
-                .httpBasic();
+                .httpBasic()
+                .and()
+                .csrf()
+                .requireCsrfProtectionMatcher(csrfRequestMatcher);
     }
 
     @Override
@@ -62,6 +68,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             }
         });
     }
+
+    RequestMatcher csrfRequestMatcher = new RequestMatcher() {
+        private Pattern allowedMethods = Pattern.compile("^(GET|POST|PUT|DELETE)$");
+        // Disable CSFR protection on the following urls:
+        private AntPathRequestMatcher[] requestMatchers = {
+                new AntPathRequestMatcher("/respond"),
+        };
+        @Override
+        public boolean matches(HttpServletRequest request) {
+            // If the request match one url the CSFR protection will be disabled
+            for (AntPathRequestMatcher rm : requestMatchers) {
+                if (rm.matches(request)) { return false; }
+            }
+            return !allowedMethods.matcher(request.getMethod()).matches();
+        }
+    };
 
     @Bean
     public SessionRegistry getSessionRegistry(){
