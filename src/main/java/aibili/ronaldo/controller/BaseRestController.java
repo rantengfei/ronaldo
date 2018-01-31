@@ -1,6 +1,7 @@
 package aibili.ronaldo.controller;
 
 import aibili.ronaldo.dao.RestDao;
+import aibili.ronaldo.dao.impl.RestDaoImpl;
 import aibili.ronaldo.domain.User;
 import aibili.ronaldo.utils.MD5Util;
 import aibili.ronaldo.utils.ReturnValueUtil;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RequestMapping(value = "/api/ronaldo")
 public class BaseRestController {
     @Autowired
-    private RestDao restDao;
+    private RestDaoImpl restDao;
 
     @RequestMapping(value = "/*/{id}", method = RequestMethod.GET)
     public Object details(HttpServletRequest request, @PathVariable("id") Integer id) {
@@ -84,5 +85,13 @@ public class BaseRestController {
         String prefix = "api/ronaldo/";
         String url = request.getRequestURI();
         return url.substring(url.indexOf(prefix) + prefix.length()).split("/");
+    }
+
+    private String tableName(String tableName){
+        Map<String, Object> map = restDao.findTableView(tableName);
+        if(null != map && map.size()>0){
+            tableName = tableName + "_view";
+        }
+        return tableName;
     }
 }
