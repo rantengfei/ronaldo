@@ -14,8 +14,8 @@ import javax.sql.DataSource;
  * Created by rtf on  2018/1/29.
  */
 
-//@Configuration
-//@ComponentScan
+@Configuration
+@ComponentScan
 public class TransactionConfig implements TransactionManagementConfigurer{
     @Autowired
     private DataSource dataSource;

@@ -1,5 +1,6 @@
 server:
   port: 9829
+
 spring:
   application:
     name: ronaldo
@@ -10,6 +11,20 @@ spring:
     username: capital
     password: capitaldb
     driver-class-name: org.postgresql.Driver
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    timeout: 0
+    pool:
+      max-active: 8
+      max-wait: -1
+      max-idle: 8
+      min-idle: 0
+  session:
+    store-type: none
+
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
@@ -19,3 +34,6 @@ logging:
     aibili:
       ronaldo:
         dao: debug
+
+
+

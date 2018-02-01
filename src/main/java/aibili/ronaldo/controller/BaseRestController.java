@@ -1,8 +1,6 @@
 package aibili.ronaldo.controller;
 
-import aibili.ronaldo.dao.RestDao;
 import aibili.ronaldo.dao.impl.RestDaoImpl;
-import aibili.ronaldo.domain.User;
 import aibili.ronaldo.utils.MD5Util;
 import aibili.ronaldo.utils.ReturnValueUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;

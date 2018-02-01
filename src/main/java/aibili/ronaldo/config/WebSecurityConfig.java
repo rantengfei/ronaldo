@@ -38,6 +38,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/ronaldo/signup").permitAll()
                 .antMatchers("/api/ronaldo/logout").permitAll()
                 .antMatchers("/api/ronaldo/register").permitAll()
+                .antMatchers("/api/ronaldo/profile").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().maximumSessions(1).sessionRegistry(sessionRegistry)

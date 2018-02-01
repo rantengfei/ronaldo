@@ -28,7 +28,8 @@ public class UrlAccessDecisionManager implements AccessDecisionManager {
                 || matchers("/api/ronaldo/login", request)
                 || matchers("/api/ronaldo/signup", request)
                 || matchers("/api/ronaldo/logout", request)
-                || matchers("/api/ronaldo/register", request)) {
+                || matchers("/api/ronaldo/register", request)
+                || matchers("/api/ronaldo/profile", request)) {
             return;
         } else {
             for (GrantedAuthority ga : authentication.getAuthorities()) {
