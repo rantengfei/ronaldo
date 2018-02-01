@@ -1,20 +1,35 @@
 package aibili.ronaldo.controller;
-
-import aibili.ronaldo.dao.RestDao;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import aibili.ronaldo.dao.impl.RestDaoImpl;
-import aibili.ronaldo.domain.User;
 import aibili.ronaldo.utils.MD5Util;
+import aibili.ronaldo.utils.MimeTypeUtil;
 import aibili.ronaldo.utils.ReturnValueUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.sun.org.apache.regexp.internal.RE;
+import eu.medsea.mimeutil.MimeUtil;
+//import net.sf.jmimemagic.Magic;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+//import net.sf.jmimemagic.MagicMatch;
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
+import static sun.rmi.transport.TransportConstants.Magic;
 
 /**
  * Created by rtf on  2018/1/30.
@@ -81,10 +96,48 @@ public class BaseRestController {
         return ReturnValueUtil.ok();
     }
 
+
+
     private String[] urlProcess(HttpServletRequest request) {
         String prefix = "api/ronaldo/";
         String url = request.getRequestURI();
         return url.substring(url.indexOf(prefix) + prefix.length()).split("/");
+    }
+
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public Object upload(HttpServletRequest request,
+                         @RequestParam("files") MultipartFile[] uploadfiles ) {
+        String filePath="/home/fungleo/yjl/tmp/";
+        if(!new File(filePath).exists()){
+            new File(filePath).mkdirs();
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateNowStr = sdf.format(new Date())+"/";
+        if(!new File(filePath+dateNowStr).exists()){
+            new File(filePath+dateNowStr).mkdirs();
+        }
+        MultipartFile file;
+        BufferedOutputStream stream;
+        for (int i= 0; i < uploadfiles.length; i++) {
+            file =uploadfiles[i];
+            if (!file.isEmpty()) {
+                try {
+                    byte[] bytes = file.getBytes();
+                    String suffix = MimeTypeUtil.getSuffix(file.getContentType());
+                    if(null == suffix) {
+                        return ReturnValueUtil.fail("不支持的文件类型！");
+                    }
+                    stream = new BufferedOutputStream(new FileOutputStream(new File((filePath+dateNowStr+new Date().getTime()+"."+suffix))));
+                    stream.write(bytes);
+                    stream.close();
+                } catch (Exception e) {
+                    return ReturnValueUtil.fail("You failed to upload " + i + " => " + e.getMessage());
+                }
+            } else {
+                return ReturnValueUtil.fail("You failed to upload " + i + " because the file was empty.");
+            }
+        }
+        return ReturnValueUtil.ok();
     }
 
     private String tableName(String tableName){
