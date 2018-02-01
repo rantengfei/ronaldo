@@ -8,28 +8,14 @@ import aibili.ronaldo.utils.ReturnValueUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.sun.org.apache.regexp.internal.RE;
-import eu.medsea.mimeutil.MimeUtil;
-//import net.sf.jmimemagic.Magic;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-//import net.sf.jmimemagic.MagicMatch;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
-import static sun.rmi.transport.TransportConstants.Magic;
 
 /**
  * Created by rtf on  2018/1/30.
@@ -116,8 +102,8 @@ public class BaseRestController {
         if(!new File(filePath+dateNowStr).exists()){
             new File(filePath+dateNowStr).mkdirs();
         }
-        MultipartFile file;
-        BufferedOutputStream stream;
+        MultipartFile file = null;
+        BufferedOutputStream stream = null;
         for (int i= 0; i < uploadfiles.length; i++) {
             file =uploadfiles[i];
             if (!file.isEmpty()) {
@@ -127,10 +113,11 @@ public class BaseRestController {
                     if(null == suffix) {
                         return ReturnValueUtil.fail("不支持的文件类型！");
                     }
-                    stream = new BufferedOutputStream(new FileOutputStream(new File((filePath+dateNowStr+new Date().getTime()+"."+suffix))));
+                    stream = new BufferedOutputStream(new FileOutputStream(new File((filePath+dateNowStr+new Date().getTime()+suffix))));
                     stream.write(bytes);
                     stream.close();
                 } catch (Exception e) {
+                    stream = null;
                     return ReturnValueUtil.fail("You failed to upload " + i + " => " + e.getMessage());
                 }
             } else {
