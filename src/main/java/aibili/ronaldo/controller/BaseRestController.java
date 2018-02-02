@@ -104,6 +104,7 @@ public class BaseRestController {
         }
         MultipartFile file = null;
         BufferedOutputStream stream = null;
+        List<String> suffix_list=new ArrayList();
         for (int i= 0; i < uploadfiles.length; i++) {
             file =uploadfiles[i];
             if (!file.isEmpty()) {
@@ -111,9 +112,11 @@ public class BaseRestController {
                     byte[] bytes = file.getBytes();
                     String suffix = MimeTypeUtil.getSuffix(file.getContentType());
                     if(null == suffix) {
-                        return ReturnValueUtil.fail("不支持的文件类型！");
+                        suffix_list.add(file.getOriginalFilename());
+                        continue;
                     }
-                    stream = new BufferedOutputStream(new FileOutputStream(new File((filePath+dateNowStr+new Date().getTime()+suffix))));
+
+                    stream = new BufferedOutputStream(new FileOutputStream(new File((filePath+dateNowStr+new Date().getTime()+"."+suffix))));
                     stream.write(bytes);
                     stream.close();
                 } catch (Exception e) {
@@ -123,6 +126,13 @@ public class BaseRestController {
             } else {
                 return ReturnValueUtil.fail("You failed to upload " + i + " because the file was empty.");
             }
+        }
+        String listString="";
+        if(null!=suffix_list){
+            for(String s : suffix_list){
+                listString += s + ",";
+            }
+            return ReturnValueUtil.fail(listString.substring(0,listString.length()-1)+"是不支持的文件类型，上传失败");
         }
         return ReturnValueUtil.ok();
     }
