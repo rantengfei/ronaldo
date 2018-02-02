@@ -11,6 +11,12 @@ import java.util.Map;
  * Created by rtf on  2018/1/30.
  */
 public interface RestDao {
+    @SelectProvider(type=DynamicSql.class, method="findBySql")
+    List<Map<String, Object>> findAllBySql(@Param("sql") final String sql);
+
+    @SelectProvider(type=DynamicSql.class, method="findBySql")
+    Map<String, Object> findOneBySql(@Param("sql") final String sql);
+
     @SelectProvider(type=DynamicSql.class, method="findAllSql")
     List<Map<String, Object>> findObject(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map);
 

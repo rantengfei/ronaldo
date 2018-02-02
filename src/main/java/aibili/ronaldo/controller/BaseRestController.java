@@ -33,6 +33,10 @@ public class BaseRestController {
 
     @RequestMapping(value = "/*", method = RequestMethod.GET)
     public Object list(HttpServletRequest request) {
+        return getObject(request, restDao);
+    }
+
+    private Object getObject(HttpServletRequest request, RestDaoImpl restDao) {
         String[] preUrl = urlProcess(request);
         Map<String, Object> params = new HashMap<>();
         for (Map.Entry<String, String[]> entry :  request.getParameterMap().entrySet()){

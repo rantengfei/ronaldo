@@ -3,6 +3,7 @@ package aibili.ronaldo.dao.impl;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
+import javax.websocket.server.PathParam;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,10 @@ import java.util.Map;
  * Created by rtf on  2018/1/26.
  */
 public class DynamicSql {
+    public String findBySql(@Param("sql") final String sql){
+        return sql;
+    }
+
     public String findByIdSql(@Param("table_name") final String table_name, @Param("id") final Integer id) {
         String sql = new SQL() {
             {
@@ -19,7 +24,6 @@ public class DynamicSql {
                 WHERE("id = #{id}");
             }
         }.toString();
-        System.out.println(sql);
         return sql;
     }
 
@@ -36,13 +40,10 @@ public class DynamicSql {
                 }
             }
         }.toString();
-        System.out.println(sql);
         return sql;
     }
 
     public String findAllSql(@Param("table_name") final String table_name, @Param("map") final Map<String, Object> map) {
-//        System.out.println("-----------------------------------------------------------");
-//        System.out.println(map);
         String sql =new SQL() {
             {
                 SELECT("*");
@@ -146,7 +147,6 @@ public class DynamicSql {
 
             }
         }.toString();
-//        System.out.println(sql);
             return sql;
 
         }
@@ -215,7 +215,6 @@ public class DynamicSql {
             }
 
         }.toString();
-        System.out.println(sql);
         return sql;
 
     }

@@ -16,6 +16,17 @@ import java.util.Map;
 public class RestDaoImpl implements RestDao{
     @Autowired
     private RestDao restDao;
+
+    @Override
+    public List<Map<String, Object>> findAllBySql(String sql) {
+        return restDao.findAllBySql(sql);
+    }
+
+    @Override
+    public Map<String, Object> findOneBySql(String sql) {
+        return restDao.findOneBySql(sql);
+    }
+
     @Override
     public List<Map<String, Object>> findObject(String table_name, Map<String, Object> map) {
         return restDao.findObject(tableName(table_name), map);
