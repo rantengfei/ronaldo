@@ -48,4 +48,11 @@ public class ReturnValueUtil {
         result.put("status", 0);
         return result;
     }
+
+    public  static Object fail(String msg){
+        Map<String, Object> result = new HashMap<>();
+        result.put("status", 1);
+        result.put("data", msg);
+        return result;
+    }
 }
