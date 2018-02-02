@@ -2,6 +2,7 @@ package aibili.ronaldo.dao.impl;
 
 import aibili.ronaldo.dao.RestDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

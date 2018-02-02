@@ -27,7 +27,6 @@ public class UrlUserService implements UserDetailsService{
     public UserDetails loadUserByUsername(String name) { //重写loadUserByUsername 方法获得 userdetails 类型用户
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
-        List<Integer> ids = new ArrayList<>();
         List<UsersPermissionView> users = userDao.getByUserName("users_permission_view", map);
         Integer user_id = 0;
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
